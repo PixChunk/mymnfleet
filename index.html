@@ -6,10 +6,70 @@
   <title>EVE Fleet Durumu</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-900 text-white flex flex-col items-center justify-center h-screen">
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-4">
   <h1 class="text-4xl font-bold mb-6">EVE Online Fleet Durumu</h1>
-  <div id="status" class="text-2xl">Yükleniyor...</div>
 
-  <script type="module" src="./firebase.js"></script>
+  <!-- Durum gösterme -->
+  <div id="status" class="text-2xl mb-6">Yükleniyor...</div>
+
+  <!-- Admin Paneli -->
+  <div id="adminPanel" class="flex flex-col items-center space-y-3">
+    <input type="password" id="adminPass" placeholder="Admin şifresi" class="px-3 py-2 rounded text-black" />
+    <button id="toggleBtn" class="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700">Durumu Değiştir</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    // 🔹 BURAYA KENDİ FIREBASE CONFIG BİLGİLERİNİ YAZ
+    const firebaseConfig = {
+      apiKey: "AIzaSyDb_8138o6_rPY_-zUH4MgZXWnjb5c2NEk",
+      authDomain: "mymn-3949b.firebaseapp.com",
+      databaseURL: "https://mymn-3949b-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "mymn-3949b",
+      storageBucket: "mymn-3949b.firebasestorage.app",
+      messagingSenderId: "407180149461",
+      appId: "1:407180149461:web:0b7de3f295b3a180e4985c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const statusRef = ref(db, "fleetStatus");
+
+    const statusDiv = document.getElementById("status");
+    const toggleBtn = document.getElementById("toggleBtn");
+    const adminPassInput = document.getElementById("adminPass");
+
+    const ADMIN_PASSWORD = "1234"; // Basit şifre, değiştir
+
+    // Durumu göster
+    onValue(statusRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data === true) {
+        statusDiv.textContent = "Fleet AKTİF 🚀";
+        statusDiv.classList.remove("text-red-500");
+        statusDiv.classList.add("text-green-500");
+      } else if (data === false) {
+        statusDiv.textContent = "Fleet YOK ❌";
+        statusDiv.classList.remove("text-green-500");
+        statusDiv.classList.add("text-red-500");
+      } else {
+        statusDiv.textContent = "Durum bilinmiyor…";
+        statusDiv.classList.remove("text-green-500", "text-red-500");
+      }
+    });
+
+    // Durumu değiştirme (admin şifreli)
+    toggleBtn.addEventListener("click", async () => {
+      if (adminPassInput.value !== ADMIN_PASSWORD) {
+        alert("Hatalı şifre!");
+        return;
+      }
+      const snapshot = await new Promise((res) => onValue(statusRef, res, { onlyOnce: true }));
+      const currentVal = snapshot.val();
+      await set(statusRef, !currentVal);
+    });
+  </script>
 </body>
 </html>
