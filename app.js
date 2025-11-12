@@ -13,6 +13,7 @@ const createFleetBtn = document.getElementById("createFleet");
 
 let currentChar = null;
 
+// Karakter portresini göster
 function showPreview(char){
   if(!char){document.getElementById("charPreview").style.display="none";return;}
   previewImg.src = `https://images.evetech.net/characters/${char.id}/portrait?size=128`;
@@ -22,8 +23,14 @@ function showPreview(char){
   document.getElementById("charPreview").style.display="flex";
 }
 
-function saveCurrentChar(){localStorage.setItem('currentChar', JSON.stringify(currentChar));}
+// LocalStorage'da karakteri kaydet
+function saveCurrentChar(){
+  if(currentChar){
+    localStorage.setItem('currentChar', JSON.stringify(currentChar));
+  }
+}
 
+// Login butonu
 loginBtn.addEventListener("click", ()=>{
   const id = charIdInput.value.trim();
   const name = charNameInput.value.trim();
@@ -31,11 +38,16 @@ loginBtn.addEventListener("click", ()=>{
   if(!id||!name||!pw){alert("Tüm alanları doldurun!");return;}
   if(!/^\d+$/.test(id)){alert("ID sadece rakam olmalı");return;}
 
-  const storedPw = localStorage.getItem(`pw_${id}`);
-  if(storedPw && storedPw!==pw){alert("Şifre hatalı!");return;}
-  if(!storedPw){localStorage.setItem(`pw_${id}`, pw);}
+  // Şifreyi kaydet ve her zaman kontrol et
+  let savedPw = localStorage.getItem(`pw_${id}`);
+  if(!savedPw){
+    localStorage.setItem(`pw_${id}`, pw);
+  } else if(savedPw !== pw){
+    alert("Şifre hatalı! Yeni şifre ile güncellemek için Reset Şifre butonunu kullanın.");
+    return;
+  }
 
-  currentChar = {id,name};
+  currentChar = {id, name};
   saveCurrentChar();
 
   loginBtn.style.display="none";
@@ -46,24 +58,35 @@ loginBtn.addEventListener("click", ()=>{
   renderFleets();
 });
 
+// Logout
 logoutBtn.addEventListener("click", ()=>{
-  currentChar=null;localStorage.removeItem('currentChar');
-  loginBtn.style.display="inline-block";logoutBtn.style.display="none";
+  currentChar=null;
+  localStorage.removeItem('currentChar');
+  loginBtn.style.display="inline-block";
+  logoutBtn.style.display="none";
   charSection.style.display="none";
   charIdInput.value="";charNameInput.value="";charPasswordInput.value="";
 });
 
+// Fleet oluştur
 createFleetBtn.addEventListener("click", ()=>{
   if(!currentChar){alert("Önce giriş yapın");return;}
   const name=fleetNameInput.value.trim();
   if(!name){alert("Fleet adı girin");return;}
   const fleets=JSON.parse(localStorage.getItem("fleets")||"[]");
-  fleets.unshift({id:Date.now().toString(),owner:currentChar.name,ownerId:currentChar.id,title:name,created:new Date().toLocaleString()});
+  fleets.unshift({
+    id:Date.now().toString(),
+    owner:currentChar.name,
+    ownerId:currentChar.id,
+    title:name,
+    created:new Date().toLocaleString()
+  });
   localStorage.setItem("fleets",JSON.stringify(fleets));
   fleetNameInput.value="";
   renderFleets();
 });
 
+// Fleetleri render et
 function renderFleets(){
   const fleets=JSON.parse(localStorage.getItem("fleets")||"[]");
   fleetList.innerHTML=fleets.map(f=>{
@@ -77,16 +100,26 @@ function renderFleets(){
       ${canDelete?`<button class="deleteBtn" data-id="${f.id}">Sil</button>`:""}
     </li>`;
   }).join("");
-  document.querySelectorAll(".deleteBtn").forEach(btn=>btn.onclick=()=>{
-    const fleets=JSON.parse(localStorage.getItem("fleets")||"[]");
-    const filtered=fleets.filter(f=>f.id!==btn.dataset.id);
-    localStorage.setItem("fleets",JSON.stringify(filtered));
-    renderFleets();
+  document.querySelectorAll(".deleteBtn").forEach(btn=>{
+    btn.onclick=()=>{
+      const fleets=JSON.parse(localStorage.getItem("fleets")||"[]");
+      const filtered=fleets.filter(f=>f.id!==btn.dataset.id);
+      localStorage.setItem("fleets",JSON.stringify(filtered));
+      renderFleets();
+    }
   });
 }
 
+// Sayfa yüklenince
 window.addEventListener("load", ()=>{
   const saved = localStorage.getItem("currentChar");
-  if(saved){const parsed=JSON.parse(saved);charIdInput.value=parsed.id;charNameInput.value=parsed.name;}
+  if(saved){
+    const parsed = JSON.parse(saved);
+    currentChar = parsed;
+    showPreview(currentChar);
+    loginBtn.style.display="none";
+    logoutBtn.style.display="inline-block";
+    charSection.style.display="block";
+  }
   renderFleets();
 });
