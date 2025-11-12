@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>EVE Fleet Tracker</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EVE Fleet Panel</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Fleet Tracker</h1>
-  <div id="fleet-list"></div>
-  <button id="login">Login with EVE SSO</button>
+  <h1>EVE Fleet Panel</h1>
+  <button id="login">EVE ile Giriş Yap</button>
+  <div id="charInfo"></div>
+  <div id="loading" class="loading" style="display:none;">Giriş yapılıyor...</div>
 
   <script src="app.js"></script>
 </body>
