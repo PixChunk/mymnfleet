@@ -18,11 +18,12 @@ loginBtn.addEventListener("click", () => {
 
   currentChar = { id, name };
 
-  // Portreyi direkt ESI API üzerinden göster
+  // Portre URL'si
   const portraitUrl = `https://images.evetech.net/characters/${id}/portrait?size=128`;
 
+  // Fallback resmi kullan: Eğer portre yüklenemezse
   charInfo.innerHTML = `
-    <img src="${portraitUrl}" alt="Portrait" />
+    <img src="${portraitUrl}" alt="Portrait" onerror="this.src='https://via.placeholder.com/128?text=No+Image';" />
     <p>${name}</p>
   `;
 
@@ -31,6 +32,8 @@ loginBtn.addEventListener("click", () => {
 
   // LocalStorage'a kaydet
   localStorage.setItem("currentChar", JSON.stringify(currentChar));
+
+  renderFleets();
 });
 
 // Fleet oluştur
@@ -55,7 +58,9 @@ function renderFleets() {
   const fleets = JSON.parse(localStorage.getItem("fleets") || "[]");
   fleetList.innerHTML = fleets.map(fleet => `
     <li>
-      <img src="https://images.evetech.net/characters/${fleet.charId}/portrait?size=32" alt="">
+      <img src="https://images.evetech.net/characters/${fleet.charId}/portrait?size=32" 
+           alt="Portrait" 
+           onerror="this.src='https://via.placeholder.com/32?text=No';" />
       <b>${fleet.owner}</b> - ${fleet.created}
     </li>
   `).join("");
@@ -69,7 +74,7 @@ window.addEventListener("load", () => {
     const portraitUrl = `https://images.evetech.net/characters/${currentChar.id}/portrait?size=128`;
 
     charInfo.innerHTML = `
-      <img src="${portraitUrl}" alt="Portrait" />
+      <img src="${portraitUrl}" alt="Portrait" onerror="this.src='https://via.placeholder.com/128?text=No+Image';" />
       <p>${currentChar.name}</p>
     `;
     document.getElementById("loginSection").style.display = "none";
