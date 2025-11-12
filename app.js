@@ -1,4 +1,5 @@
-const charInput = document.getElementById("charInput");
+const charIdInput = document.getElementById("charIdInput");
+const charNameInput = document.getElementById("charNameInput");
 const loginBtn = document.getElementById("login");
 const charSection = document.getElementById("charSection");
 const charInfo = document.getElementById("charInfo");
@@ -8,41 +9,19 @@ const fleetList = document.getElementById("fleetList");
 let currentChar = null;
 
 // Giriş yap
-loginBtn.addEventListener("click", async () => {
-  const value = charInput.value.trim();
-  if (!value) return alert("Lütfen karakter adı veya ID yaz!");
+loginBtn.addEventListener("click", () => {
+  const id = charIdInput.value.trim();
+  const name = charNameInput.value.trim();
 
-  let charId, charName;
+  if (!id || !name) return alert("Lütfen hem ID hem isim girin!");
+  if (!/^\d+$/.test(id)) return alert("ID sadece rakamlardan oluşmalıdır!");
 
-  // Eğer sayı girilmişse direkt ID olarak kullan
-  if (/^\d+$/.test(value)) {
-    charId = value;
-    charName = value; // Adı bilmesek ID’yi göster
-  } else {
-    // API ile karakter ID bul
-    try {
-      const res = await fetch(`https://esi.evetech.net/latest/search/?categories=character&search=${encodeURIComponent(value)}&strict=false`);
-      const data = await res.json();
-
-      if (!data.character || data.character.length === 0) {
-        alert("Karakter bulunamadı!");
-        return;
-      }
-
-      charId = data.character[0];
-      charName = value;
-    } catch (err) {
-      console.error(err);
-      return alert("Karakter bilgisi alınamadı!");
-    }
-  }
-
-  currentChar = { id: charId, name: charName };
+  currentChar = { id, name };
 
   // Karakteri göster
   charInfo.innerHTML = `
-    <img src="https://images.evetech.net/characters/${charId}/portrait?size=128" alt="Portrait" />
-    <p>${charName}</p>
+    <img src="https://images.evetech.net/characters/${id}/portrait?size=128" alt="Portrait" />
+    <p>${name}</p>
   `;
 
   document.getElementById("loginSection").style.display = "none";
