@@ -8,7 +8,7 @@ body {
   max-width:900px;
   margin:40px auto;
   padding:20px;
-  background:rgba(10,14,20,0.9);
+  background:rgba(10,14,20,0.95);
   border-radius:15px;
   box-shadow:0 0 40px #00ffc0;
   border:1px solid #00ffc0;
@@ -40,18 +40,13 @@ button {
 }
 button:hover { background:#00e0a0; transform:translateY(-2px); }
 
-.char-preview {
-  display:flex;
-  align-items:center;
-  gap:15px;
-  justify-content:center;
+.user-preview {
+  text-align:center;
   margin-bottom:20px;
-}
-.char-preview img {
-  width:96px; height:96px;
-  border-radius:50%;
-  border:2px solid rgba(0,255,204,0.3);
-  box-shadow:0 0 12px #00ffc0;
+  font-size:1.2rem;
+  font-weight:bold;
+  color:#00ffc0;
+  text-shadow:0 0 10px #00ffc0;
 }
 
 .fleet-list {
@@ -71,7 +66,7 @@ button:hover { background:#00e0a0; transform:translateY(-2px); }
   justify-content:center;
   gap:8px;
   width:250px;
-  min-height:180px;
+  min-height:160px;
   padding:15px;
   border-radius:15px;
   box-shadow:0 0 20px rgba(0,255,192,0.4);
@@ -79,6 +74,7 @@ button:hover { background:#00e0a0; transform:translateY(-2px); }
   background:rgba(0,0,0,0.35);
   border:3px solid rgba(0,255,204,0.2);
   position:relative;
+  text-align:center;
 }
 
 .fleet-list li.open {
@@ -94,12 +90,6 @@ button:hover { background:#00e0a0; transform:translateY(-2px); }
 .fleet-list li:hover {
   box-shadow:0 0 25px #00ffc0;
   transform:translateY(-4px) scale(1.02);
-}
-
-.fleet-list img {
-  width:80px; height:80px;
-  border-radius:50%;
-  border:2px solid rgba(0,255,204,0.3);
 }
 
 .fleet-list div {
@@ -118,8 +108,8 @@ button:hover { background:#00e0a0; transform:translateY(-2px); }
 }
 .deleteBtn:hover { background:#ff1c1c; }
 
-.small { font-size:13px; color:#00ffc0aa; }
 .hint { font-size:12px; color:#00ffc0aa; text-align:center; }
 #loginSection { margin-bottom:20px; }
-#charSection { animation:fadeIn 0.5s ease; }
+#fleetSection { animation:fadeIn 0.5s ease; }
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+#createFleet input, #createFleet select { margin-bottom:8px; }

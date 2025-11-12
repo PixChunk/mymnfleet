@@ -12,33 +12,32 @@
   <h1>MyMN Fleet</h1>
 
   <div id="loginSection">
-    <input type="text" id="charIdInput" placeholder="Karakter ID">
-    <input type="text" id="charNameInput" placeholder="Karakter Adı">
-    <input type="password" id="charPasswordInput" placeholder="Şifre">
+    <input type="text" id="usernameInput" placeholder="Kullanıcı Adı">
+    <input type="password" id="passwordInput" placeholder="Şifre">
     <br>
-    <input type="text" id="fleetNameInput" placeholder="Fleet Adı">
-    <input type="text" id="fleetDescInput" placeholder="Fleet Açıklaması">
-    <select id="fleetStatusSelect">
-      <option value="open" selected>Açık</option>
-      <option value="closed">Kapalı</option>
-    </select>
-    <br>
-    <button id="login">Giriş / Kayıt</button>
-    <button id="logout" style="display:none;">Çıkış</button>
+    <button id="loginBtn">Giriş / Kayıt</button>
+    <button id="logoutBtn" style="display:none;">Çıkış</button>
     <p class="hint">İlk girişte şifreniz kaydedilir. Sonraki girişlerde aynı şifre ile doğrulanır.</p>
   </div>
 
-  <div id="charSection" style="display:none;">
-    <div id="charPreview" class="char-preview">
-      <img id="previewImg" src="" alt="Portrait">
-      <div>
-        <div id="previewName"></div>
-        <div id="previewId" class="small"></div>
-      </div>
+  <div id="fleetSection" style="display:none;">
+    <div id="userPreview" class="user-preview">
+      <div id="previewName"></div>
+    </div>
+
+    <div id="createFleet">
+      <input type="text" id="fleetNameInput" placeholder="Fleet Adı">
+      <input type="text" id="fleetDescInput" placeholder="Fleet Açıklaması">
+      <select id="fleetStatusSelect">
+        <option value="open" selected>Açık</option>
+        <option value="closed">Kapalı</option>
+      </select>
+      <button id="addFleetBtn">Fleet Oluştur</button>
     </div>
 
     <ul id="fleetList" class="fleet-list"></ul>
   </div>
+
 </div>
 
 <script src="app.js"></script>
