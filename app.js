@@ -1,4 +1,3 @@
-const charIdInput = document.getElementById("charIdInput");
 const charNameInput = document.getElementById("charNameInput");
 const loginBtn = document.getElementById("login");
 const charSection = document.getElementById("charSection");
@@ -10,17 +9,16 @@ let currentChar = null;
 
 // Giriş yap
 loginBtn.addEventListener("click", () => {
-  const id = charIdInput.value.trim();
   const name = charNameInput.value.trim();
+  if (!name) return alert("Lütfen karakter adını yaz!");
 
-  if (!id || !name) return alert("Lütfen hem ID hem isim girin!");
-  if (!/^\d+$/.test(id)) return alert("ID sadece rakamlardan oluşmalıdır!");
+  currentChar = { name };
 
-  currentChar = { id, name };
+  // EVE Who portre URL'si
+  const portraitUrl = `https://evewho.com/pilot/${encodeURIComponent(name)}/portrait`;
 
-  // Karakteri göster
   charInfo.innerHTML = `
-    <img src="https://images.evetech.net/characters/${id}/portrait?size=128" alt="Portrait" />
+    <img src="${portraitUrl}" alt="Portrait" />
     <p>${name}</p>
   `;
 
@@ -39,7 +37,6 @@ createFleetBtn.addEventListener("click", () => {
   const newFleet = {
     id: Date.now(),
     owner: currentChar.name,
-    charId: currentChar.id,
     created: new Date().toLocaleString()
   };
 
@@ -53,7 +50,6 @@ function renderFleets() {
   const fleets = JSON.parse(localStorage.getItem("fleets") || "[]");
   fleetList.innerHTML = fleets.map(fleet => `
     <li>
-      <img src="https://images.evetech.net/characters/${fleet.charId}/portrait?size=32" alt="">
       <b>${fleet.owner}</b> - ${fleet.created}
     </li>
   `).join("");
@@ -64,8 +60,10 @@ window.addEventListener("load", () => {
   const savedChar = localStorage.getItem("currentChar");
   if (savedChar) {
     currentChar = JSON.parse(savedChar);
+    const portraitUrl = `https://evewho.com/pilot/${encodeURIComponent(currentChar.name)}/portrait`;
+
     charInfo.innerHTML = `
-      <img src="https://images.evetech.net/characters/${currentChar.id}/portrait?size=128" alt="Portrait" />
+      <img src="${portraitUrl}" alt="Portrait" />
       <p>${currentChar.name}</p>
     `;
     document.getElementById("loginSection").style.display = "none";
