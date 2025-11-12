@@ -9,6 +9,7 @@ const previewName = document.getElementById("previewName");
 const previewId = document.getElementById("previewId");
 const fleetList = document.getElementById("fleetList");
 const fleetNameInput = document.getElementById("fleetNameInput");
+const fleetDescInput = document.getElementById("fleetDescInput");
 const fleetStatusSelect = document.getElementById("fleetStatusSelect");
 const createFleetBtn = document.getElementById("createFleet");
 
@@ -59,19 +60,23 @@ logoutBtn.addEventListener("click", ()=>{
 createFleetBtn.addEventListener("click", ()=>{
   if(!currentChar){alert("Önce giriş yapın");return;}
   const name = fleetNameInput.value.trim();
+  const desc = fleetDescInput.value.trim();
   const status = fleetStatusSelect.value;
   if(!name){alert("Fleet adı girin");return;}
+  if(!desc){alert("Fleet açıklaması girin");return;}
   const fleets = JSON.parse(localStorage.getItem("fleets")||"[]");
   fleets.unshift({
     id: Date.now().toString(),
     owner: currentChar.name,
     ownerId: currentChar.id,
     title: name,
+    desc: desc,
     status: status,
     created: new Date().toLocaleString()
   });
   localStorage.setItem("fleets", JSON.stringify(fleets));
   fleetNameInput.value="";
+  fleetDescInput.value="";
   renderFleets();
 });
 
@@ -82,6 +87,7 @@ function renderFleets(){
     return `<li data-id="${f.id}" class="${f.status}">
       <img src="https://images.evetech.net/characters/${f.ownerId}/portrait?size=64" onerror="this.src='https://via.placeholder.com/64?text=No';">
       <div><b>${f.title}</b></div>
+      <div>${f.desc}</div>
       <div class="small">${f.owner} • ${f.created} • ${f.status==="open"?"Açık":"Kapalı"}</div>
       ${canDelete?`<button class="deleteBtn" data-id="${f.id}">Sil</button>`:""}
     </li>`;

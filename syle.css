@@ -39,6 +39,7 @@ button {
   transition:0.2s;
 }
 button:hover { background:#00e0a0; transform:translateY(-2px); }
+
 .char-preview {
   display:flex;
   align-items:center;
@@ -52,41 +53,62 @@ button:hover { background:#00e0a0; transform:translateY(-2px); }
   border:2px solid rgba(0,255,204,0.3);
   box-shadow:0 0 12px #00ffc0;
 }
+
 .fleet-list {
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap:15px;
-  padding:0; margin-top:20px;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:20px;
+  padding:0;
+  margin-top:20px;
   list-style:none;
 }
+
 .fleet-list li {
   display:flex;
   flex-direction:column;
-  gap:10px;
-  padding:12px;
-  border-radius:12px;
-  box-shadow:0 0 15px rgba(0,255,192,0.3);
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  width:250px;
+  min-height:180px;
+  padding:15px;
+  border-radius:15px;
+  box-shadow:0 0 20px rgba(0,255,192,0.4);
   transition:0.2s;
-  background:rgba(0,0,0,0.4);
+  background:rgba(0,0,0,0.35);
+  border:3px solid rgba(0,255,204,0.2);
+  position:relative;
 }
+
 .fleet-list li.open {
-  border-left:5px solid #00ff00;
+  border-color:#00ff00;
   background:rgba(0,255,0,0.08);
 }
+
 .fleet-list li.closed {
-  border-left:5px solid #ff4c4c;
+  border-color:#ff4c4c;
   background:rgba(255,0,0,0.08);
 }
-.fleet-list li:hover { 
-  box-shadow:0 0 20px #00ffc0; transform:translateY(-3px);
+
+.fleet-list li:hover {
+  box-shadow:0 0 25px #00ffc0;
+  transform:translateY(-4px) scale(1.02);
 }
+
 .fleet-list img {
-  width:64px; height:64px;
+  width:80px; height:80px;
   border-radius:50%;
-  align-self:center;
+  border:2px solid rgba(0,255,204,0.3);
 }
+
+.fleet-list div {
+  text-align:center;
+}
+
 .deleteBtn {
-  align-self:flex-end;
+  position:absolute;
+  top:8px; right:8px;
   background:#ff4c4c;
   color:white;
   padding:6px 10px;
@@ -95,6 +117,7 @@ button:hover { background:#00e0a0; transform:translateY(-2px); }
   transition:0.2s;
 }
 .deleteBtn:hover { background:#ff1c1c; }
+
 .small { font-size:13px; color:#00ffc0aa; }
 .hint { font-size:12px; color:#00ffc0aa; text-align:center; }
 #loginSection { margin-bottom:20px; }
