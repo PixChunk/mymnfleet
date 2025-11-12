@@ -12,28 +12,34 @@ loginBtn.addEventListener("click", async () => {
   const name = charInput.value.trim();
   if (!name) return alert("Lütfen karakter adını yaz!");
 
-  const res = await fetch(`https://esi.evetech.net/latest/search/?categories=character&search=${encodeURIComponent(name)}&strict=true`);
-  const data = await res.json();
+  try {
+    // EVE ESI arama API
+    const res = await fetch(`https://esi.evetech.net/latest/search/?categories=character&search=${encodeURIComponent(name)}&strict=true`);
+    const data = await res.json();
 
-  if (!data.character) {
-    alert("Karakter bulunamadı!");
-    return;
+    if (!data.character || data.character.length === 0) {
+      alert("Karakter bulunamadı!");
+      return;
+    }
+
+    const charId = data.character[0];
+    currentChar = { id: charId, name };
+
+    // Karakteri göster
+    charInfo.innerHTML = `
+      <img src="https://images.evetech.net/characters/${charId}/portrait?size=128" alt="Portrait" />
+      <p>${name}</p>
+    `;
+
+    document.getElementById("loginSection").style.display = "none";
+    charSection.style.display = "block";
+
+    // LocalStorage'a kaydet
+    localStorage.setItem("currentChar", JSON.stringify(currentChar));
+  } catch (err) {
+    console.error(err);
+    alert("Karakter bilgisi alınamadı!");
   }
-
-  const charId = data.character[0];
-  currentChar = { id: charId, name };
-
-  // Ekranda göster
-  charInfo.innerHTML = `
-    <img src="https://images.evetech.net/characters/${charId}/portrait?size=128" alt="Portrait" />
-    <p>${name}</p>
-  `;
-
-  document.getElementById("loginSection").style.display = "none";
-  charSection.style.display = "block";
-
-  // Local'e kaydet
-  localStorage.setItem("currentChar", JSON.stringify(currentChar));
 });
 
 // Fleet oluştur
@@ -64,7 +70,7 @@ function renderFleets() {
   `).join("");
 }
 
-// Giriş yapılmış karakteri geri yükle
+// Sayfa yüklendiğinde kayıtlı karakter ve fleetleri yükle
 window.addEventListener("load", () => {
   const savedChar = localStorage.getItem("currentChar");
   if (savedChar) {
