@@ -1,4 +1,4 @@
-const charInput = document.getElementById("charName");
+const charInput = document.getElementById("charInput");
 const loginBtn = document.getElementById("login");
 const charSection = document.getElementById("charSection");
 const charInfo = document.getElementById("charInfo");
@@ -7,39 +7,49 @@ const fleetList = document.getElementById("fleetList");
 
 let currentChar = null;
 
-// Giriş yap (karakteri bul)
+// Giriş yap
 loginBtn.addEventListener("click", async () => {
-  const name = charInput.value.trim();
-  if (!name) return alert("Lütfen karakter adını yaz!");
+  const value = charInput.value.trim();
+  if (!value) return alert("Lütfen karakter adı veya ID yaz!");
 
-  try {
-    // EVE ESI arama API
-    const res = await fetch(`https://esi.evetech.net/latest/search/?categories=character&search=${encodeURIComponent(name)}&strict=true`);
-    const data = await res.json();
+  let charId, charName;
 
-    if (!data.character || data.character.length === 0) {
-      alert("Karakter bulunamadı!");
-      return;
+  // Eğer sayı girilmişse direkt ID olarak kullan
+  if (/^\d+$/.test(value)) {
+    charId = value;
+    charName = value; // Adı bilmesek ID’yi göster
+  } else {
+    // API ile karakter ID bul
+    try {
+      const res = await fetch(`https://esi.evetech.net/latest/search/?categories=character&search=${encodeURIComponent(value)}&strict=false`);
+      const data = await res.json();
+
+      if (!data.character || data.character.length === 0) {
+        alert("Karakter bulunamadı!");
+        return;
+      }
+
+      charId = data.character[0];
+      charName = value;
+    } catch (err) {
+      console.error(err);
+      return alert("Karakter bilgisi alınamadı!");
     }
-
-    const charId = data.character[0];
-    currentChar = { id: charId, name };
-
-    // Karakteri göster
-    charInfo.innerHTML = `
-      <img src="https://images.evetech.net/characters/${charId}/portrait?size=128" alt="Portrait" />
-      <p>${name}</p>
-    `;
-
-    document.getElementById("loginSection").style.display = "none";
-    charSection.style.display = "block";
-
-    // LocalStorage'a kaydet
-    localStorage.setItem("currentChar", JSON.stringify(currentChar));
-  } catch (err) {
-    console.error(err);
-    alert("Karakter bilgisi alınamadı!");
   }
+
+  currentChar = { id: charId, name: charName };
+
+  // Karakteri göster
+  charInfo.innerHTML = `
+    <img src="https://images.evetech.net/characters/${charId}/portrait?size=128" alt="Portrait" />
+    <p>${charName}</p>
+  `;
+
+  document.getElementById("loginSection").style.display = "none";
+  charSection.style.display = "block";
+
+  // LocalStorage'a kaydet
+  localStorage.setItem("currentChar", JSON.stringify(currentChar));
 });
 
 // Fleet oluştur
