@@ -1,16 +1,30 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EVE Fleet Panel</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My MN Fleet</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>EVE Fleet Panel</h1>
-  <button id="login">EVE ile Giriş Yap</button>
-  <div id="charInfo"></div>
-  <div id="loading" class="loading" style="display:none;">Giriş yapılıyor...</div>
+  <div class="container">
+    <h1>My MN Fleet</h1>
+
+    <div id="loginSection">
+      <input type="text" id="charName" placeholder="Karakter adını yaz">
+      <button id="login">Giriş Yap</button>
+    </div>
+
+    <div id="charSection" style="display:none;">
+      <div id="charInfo"></div>
+      <button id="createFleet">Fleet Oluştur</button>
+    </div>
+
+    <div id="fleets">
+      <h2>Fleet Listesi</h2>
+      <ul id="fleetList"></ul>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
