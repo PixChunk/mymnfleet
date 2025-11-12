@@ -1,32 +1,72 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mymn Fleet</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MN EVE Fleet — Command</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Mymn Fleet</h1>
+  <div class="bg-stars"></div>
 
-    <div id="loginSection" class="login-panel">
-      <input type="text" id="charIdInput" placeholder="Karakter ID">
-      <input type="text" id="charNameInput" placeholder="Karakter Adı">
-      <input type="password" id="charPasswordInput" placeholder="Şifre">
-      <button id="login">Giriş Yap</button>
-    </div>
+  <main class="app">
+    <header class="hud header">
+      <h1 class="title">MN Fleet Command</h1>
+      <p class="subtitle">Lightyears away — small gang ready</p>
+    </header>
 
-    <div id="charSection" style="display:none;">
-      <div id="charInfo"></div>
-      <button id="createFleet">Fleet Oluştur</button>
-    </div>
+    <section class="columns">
+      <aside class="panel login-panel hud">
+        <h2 class="panel-title">Pilot Login</h2>
 
-    <div id="fleets">
-      <h2>Fleet Listesi</h2>
-      <ul id="fleetList"></ul>
-    </div>
-  </div>
+        <div class="field">
+          <label>ID</label>
+          <input id="charIdInput" type="text" placeholder="Karakter ID (sadece rakam)" />
+        </div>
+
+        <div class="field">
+          <label>Character</label>
+          <input id="charNameInput" type="text" placeholder="Karakter ismi" />
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <input id="charPasswordInput" type="password" placeholder="Şifre (gizli)" />
+        </div>
+
+        <div class="actions">
+          <button id="login" class="btn primary">Giriş / Kayıt</button>
+          <button id="logout" class="btn secondary" style="display:none">Çıkış</button>
+        </div>
+
+        <p class="hint">İlk defa girişte girdiğiniz şifre o karakter için kayıt edilir. Sonraki girişlerde aynı şifre ile doğrulama yapılır.</p>
+      </aside>
+
+      <section class="panel hud fleet-panel">
+        <h2 class="panel-title">Fleets</h2>
+
+        <div id="charPreview" class="char-preview" style="display:none;">
+          <img id="previewImg" src="" alt="portrait" />
+          <div id="previewInfo" class="preview-info">
+            <div id="previewName"></div>
+            <div id="previewId" class="small muted"></div>
+          </div>
+        </div>
+
+        <div class="create-row">
+          <input id="fleetNameInput" type="text" placeholder="Yeni fleet adı" />
+          <button id="createFleet" class="btn small">Oluştur</button>
+        </div>
+
+        <ul id="fleetList" class="fleet-list"></ul>
+      </section>
+    </section>
+
+    <footer class="hud footer">
+      <div class="left">© MN Fleet • EVE UI inspired</div>
+      <div class="right">Local demo — no backend</div>
+    </footer>
+  </main>
 
   <script src="app.js"></script>
 </body>
