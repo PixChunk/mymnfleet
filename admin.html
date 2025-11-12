@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fleet Yönetimi</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center h-screen">
+  <h1 class="text-3xl font-bold mb-6">Fleet Yönetim Paneli</h1>
+
+  <div id="currentStatus" class="mb-4 text-xl">Durum yükleniyor...</div>
+
+  <button id="toggleBtn" class="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700">Durumu Değiştir</button>
+
+  <script type="module" src="./firebase.js"></script>
+</body>
+</html>
