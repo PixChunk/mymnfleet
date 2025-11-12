@@ -16,6 +16,12 @@
     <input type="text" id="charNameInput" placeholder="Karakter Adı">
     <input type="password" id="charPasswordInput" placeholder="Şifre">
     <br>
+    <input type="text" id="fleetNameInput" placeholder="Yeni fleet adı">
+    <select id="fleetStatusSelect">
+      <option value="open" selected>Açık</option>
+      <option value="closed">Kapalı</option>
+    </select>
+    <br>
     <button id="login">Giriş / Kayıt</button>
     <button id="logout" style="display:none;">Çıkış</button>
     <p class="hint">İlk girişte şifreniz kaydedilir. Sonraki girişlerde aynı şifre ile doğrulanır.</p>
@@ -29,9 +35,6 @@
         <div id="previewId" class="small"></div>
       </div>
     </div>
-
-    <input type="text" id="fleetNameInput" placeholder="Yeni fleet adı">
-    <button id="createFleet">Fleet Oluştur</button>
 
     <ul id="fleetList" class="fleet-list"></ul>
   </div>

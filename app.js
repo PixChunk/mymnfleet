@@ -9,11 +9,11 @@ const previewName = document.getElementById("previewName");
 const previewId = document.getElementById("previewId");
 const fleetList = document.getElementById("fleetList");
 const fleetNameInput = document.getElementById("fleetNameInput");
+const fleetStatusSelect = document.getElementById("fleetStatusSelect");
 const createFleetBtn = document.getElementById("createFleet");
 
 let currentChar = null;
 
-// Karakter portresini göster
 function showPreview(char){
   if(!char){document.getElementById("charPreview").style.display="none";return;}
   previewImg.src = `https://images.evetech.net/characters/${char.id}/portrait?size=128`;
@@ -23,14 +23,10 @@ function showPreview(char){
   document.getElementById("charPreview").style.display="flex";
 }
 
-// LocalStorage'da karakteri kaydet
 function saveCurrentChar(){
-  if(currentChar){
-    localStorage.setItem('currentChar', JSON.stringify(currentChar));
-  }
+  if(currentChar){ localStorage.setItem('currentChar', JSON.stringify(currentChar)); }
 }
 
-// Login butonu
 loginBtn.addEventListener("click", ()=>{
   const id = charIdInput.value.trim();
   const name = charNameInput.value.trim();
@@ -38,14 +34,9 @@ loginBtn.addEventListener("click", ()=>{
   if(!id||!name||!pw){alert("Tüm alanları doldurun!");return;}
   if(!/^\d+$/.test(id)){alert("ID sadece rakam olmalı");return;}
 
-  // Şifreyi kaydet ve her zaman kontrol et
   let savedPw = localStorage.getItem(`pw_${id}`);
-  if(!savedPw){
-    localStorage.setItem(`pw_${id}`, pw);
-  } else if(savedPw !== pw){
-    alert("Şifre hatalı! Yeni şifre ile güncellemek için Reset Şifre butonunu kullanın.");
-    return;
-  }
+  if(!savedPw){ localStorage.setItem(`pw_${id}`, pw); }
+  else if(savedPw!==pw){ alert("Şifre hatalı!"); return; }
 
   currentChar = {id, name};
   saveCurrentChar();
@@ -58,64 +49,57 @@ loginBtn.addEventListener("click", ()=>{
   renderFleets();
 });
 
-// Logout
 logoutBtn.addEventListener("click", ()=>{
-  currentChar=null;
-  localStorage.removeItem('currentChar');
-  loginBtn.style.display="inline-block";
-  logoutBtn.style.display="none";
+  currentChar=null; localStorage.removeItem('currentChar');
+  loginBtn.style.display="inline-block"; logoutBtn.style.display="none";
   charSection.style.display="none";
   charIdInput.value="";charNameInput.value="";charPasswordInput.value="";
 });
 
-// Fleet oluştur
 createFleetBtn.addEventListener("click", ()=>{
   if(!currentChar){alert("Önce giriş yapın");return;}
-  const name=fleetNameInput.value.trim();
+  const name = fleetNameInput.value.trim();
+  const status = fleetStatusSelect.value;
   if(!name){alert("Fleet adı girin");return;}
-  const fleets=JSON.parse(localStorage.getItem("fleets")||"[]");
+  const fleets = JSON.parse(localStorage.getItem("fleets")||"[]");
   fleets.unshift({
-    id:Date.now().toString(),
-    owner:currentChar.name,
-    ownerId:currentChar.id,
-    title:name,
-    created:new Date().toLocaleString()
+    id: Date.now().toString(),
+    owner: currentChar.name,
+    ownerId: currentChar.id,
+    title: name,
+    status: status,
+    created: new Date().toLocaleString()
   });
-  localStorage.setItem("fleets",JSON.stringify(fleets));
+  localStorage.setItem("fleets", JSON.stringify(fleets));
   fleetNameInput.value="";
   renderFleets();
 });
 
-// Fleetleri render et
 function renderFleets(){
-  const fleets=JSON.parse(localStorage.getItem("fleets")||"[]");
-  fleetList.innerHTML=fleets.map(f=>{
+  const fleets = JSON.parse(localStorage.getItem("fleets")||"[]");
+  fleetList.innerHTML = fleets.map(f=>{
     const canDelete = currentChar && String(currentChar.id)===String(f.ownerId);
-    return `<li data-id="${f.id}">
-      <img src="https://images.evetech.net/characters/${f.ownerId}/portrait?size=32" onerror="this.src='https://via.placeholder.com/32?text=No';">
-      <div>
-        <div><b>${f.title}</b></div>
-        <div class="small">${f.owner} • ${f.created}</div>
-      </div>
+    return `<li data-id="${f.id}" class="${f.status}">
+      <img src="https://images.evetech.net/characters/${f.ownerId}/portrait?size=64" onerror="this.src='https://via.placeholder.com/64?text=No';">
+      <div><b>${f.title}</b></div>
+      <div class="small">${f.owner} • ${f.created} • ${f.status==="open"?"Açık":"Kapalı"}</div>
       ${canDelete?`<button class="deleteBtn" data-id="${f.id}">Sil</button>`:""}
     </li>`;
   }).join("");
   document.querySelectorAll(".deleteBtn").forEach(btn=>{
-    btn.onclick=()=>{
-      const fleets=JSON.parse(localStorage.getItem("fleets")||"[]");
-      const filtered=fleets.filter(f=>f.id!==btn.dataset.id);
-      localStorage.setItem("fleets",JSON.stringify(filtered));
+    btn.onclick = ()=>{
+      const fleets = JSON.parse(localStorage.getItem("fleets")||"[]");
+      const filtered = fleets.filter(f=>f.id!==btn.dataset.id);
+      localStorage.setItem("fleets", JSON.stringify(filtered));
       renderFleets();
     }
   });
 }
 
-// Sayfa yüklenince
 window.addEventListener("load", ()=>{
   const saved = localStorage.getItem("currentChar");
   if(saved){
-    const parsed = JSON.parse(saved);
-    currentChar = parsed;
+    currentChar = JSON.parse(saved);
     showPreview(currentChar);
     loginBtn.style.display="none";
     logoutBtn.style.display="inline-block";
