@@ -19,29 +19,24 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const db = getDatabase(app);
 const statusRef = ref(db, "fleetStatus");
 
-// Sayfa tipine göre davran
-if (window.location.pathname.includes("admin.html")) {
-  const btn = document.getElementById("toggleBtn");
-  const current = document.getElementById("currentStatus");
+const statusDiv = document.getElementById("status");
 
-  onValue(statusRef, (snapshot) => {
-    const data = snapshot.val();
-    current.textContent = data ? "Fleet şu anda AKTİF 🚀" : "Fleet şu anda YOK ❌";
-  });
-
-  btn.addEventListener("click", async () => {
-    const snapshot = await new Promise((res) => onValue(statusRef, res, { onlyOnce: true }));
-    const currentVal = snapshot.val();
-    await set(statusRef, !currentVal);
-  });
-} else {
-  const status = document.getElementById("status");
-
-  onValue(statusRef, (snapshot) => {
-    const data = snapshot.val();
-    status.textContent = data ? "Fleet şu anda AKTİF 🚀" : "Fleet şu anda YOK ❌";
-  });
-}
+// Firebase’den veri oku ve göster
+onValue(statusRef, (snapshot) => {
+  const data = snapshot.val();
+  if (data === true) {
+    statusDiv.textContent = "Fleet AKTİF 🚀";
+    statusDiv.classList.remove("text-red-500");
+    statusDiv.classList.add("text-green-500");
+  } else if (data === false) {
+    statusDiv.textContent = "Fleet YOK ❌";
+    statusDiv.classList.remove("text-green-500");
+    statusDiv.classList.add("text-red-500");
+  } else {
+    statusDiv.textContent = "Durum bilinmiyor…";
+    statusDiv.classList.remove("text-green-500", "text-red-500");
+  }
+});
