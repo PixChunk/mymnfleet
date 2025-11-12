@@ -1,3 +1,4 @@
+const charIdInput = document.getElementById("charIdInput");
 const charNameInput = document.getElementById("charNameInput");
 const loginBtn = document.getElementById("login");
 const charSection = document.getElementById("charSection");
@@ -9,13 +10,16 @@ let currentChar = null;
 
 // Giriş yap
 loginBtn.addEventListener("click", () => {
+  const id = charIdInput.value.trim();
   const name = charNameInput.value.trim();
-  if (!name) return alert("Lütfen karakter adını yaz!");
 
-  currentChar = { name };
+  if (!id || !name) return alert("Lütfen hem ID hem isim girin!");
+  if (!/^\d+$/.test(id)) return alert("ID sadece rakamlardan oluşmalıdır!");
 
-  // EVE Who portre URL'si
-  const portraitUrl = `https://evewho.com/pilot/${encodeURIComponent(name)}/portrait`;
+  currentChar = { id, name };
+
+  // Portreyi direkt ESI API üzerinden göster
+  const portraitUrl = `https://images.evetech.net/characters/${id}/portrait?size=128`;
 
   charInfo.innerHTML = `
     <img src="${portraitUrl}" alt="Portrait" />
@@ -37,6 +41,7 @@ createFleetBtn.addEventListener("click", () => {
   const newFleet = {
     id: Date.now(),
     owner: currentChar.name,
+    charId: currentChar.id,
     created: new Date().toLocaleString()
   };
 
@@ -50,6 +55,7 @@ function renderFleets() {
   const fleets = JSON.parse(localStorage.getItem("fleets") || "[]");
   fleetList.innerHTML = fleets.map(fleet => `
     <li>
+      <img src="https://images.evetech.net/characters/${fleet.charId}/portrait?size=32" alt="">
       <b>${fleet.owner}</b> - ${fleet.created}
     </li>
   `).join("");
@@ -60,7 +66,7 @@ window.addEventListener("load", () => {
   const savedChar = localStorage.getItem("currentChar");
   if (savedChar) {
     currentChar = JSON.parse(savedChar);
-    const portraitUrl = `https://evewho.com/pilot/${encodeURIComponent(currentChar.name)}/portrait`;
+    const portraitUrl = `https://images.evetech.net/characters/${currentChar.id}/portrait?size=128`;
 
     charInfo.innerHTML = `
       <img src="${portraitUrl}" alt="Portrait" />
